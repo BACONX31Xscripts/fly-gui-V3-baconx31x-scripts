@@ -1,0 +1,194 @@
+local TweenService=game:GetService("TweenService")
+local UserInputService=game:GetService("UserInputService")
+local RunService=game:GetService("RunService")
+local player=game.Players.LocalPlayer
+local character=player.Character or player.CharacterAdded:Wait()
+local humanoid=character:WaitForChild("Humanoid")
+local flying=false
+local flySpeed=50
+local screenGui=Instance.new("ScreenGui")
+screenGui.Name="FlyGUI_V3"
+screenGui.ResetOnSpawn=false
+screenGui.Parent=player:WaitForChild("PlayerGui")
+local mainFrame=Instance.new("Frame")
+mainFrame.Size=UDim2.new(0,300,0,400)
+mainFrame.Position=UDim2.new(0.5,-150,0.3,-200)
+mainFrame.BackgroundColor3=Color3.fromRGB(0,0,0)
+mainFrame.BorderColor3=Color3.fromRGB(255,255,255)
+mainFrame.BorderSizePixel=2
+mainFrame.Parent=screenGui
+mainFrame.Visible=true
+local titleLabel=Instance.new("TextLabel")
+titleLabel.Size=UDim2.new(1,0,0,40)
+titleLabel.Position=UDim2.new(0,0,0,0)
+titleLabel.BackgroundTransparency=1
+titleLabel.Text="FLY GUI V3"
+titleLabel.Font=Enum.Font.GothamBold
+titleLabel.TextSize=30
+titleLabel.TextColor3=Color3.fromRGB(0,255,255)
+titleLabel.TextStrokeColor3=Color3.fromRGB(0,128,128)
+titleLabel.TextStrokeTransparency=0
+titleLabel.Parent=mainFrame
+local baconLabel=Instance.new("TextLabel")
+baconLabel.Size=UDim2.new(0,100,0,20)
+baconLabel.Position=UDim2.new(1,-105,0,5)
+baconLabel.BackgroundTransparency=1
+baconLabel.Text="BACONX31X"
+baconLabel.Font=Enum.Font.GothamBold
+baconLabel.TextSize=14
+baconLabel.TextColor3=Color3.fromRGB(255,255,255)
+baconLabel.TextStrokeColor3=Color3.fromRGB(0,0,0)
+baconLabel.TextStrokeTransparency=0
+baconLabel.Parent=mainFrame
+local flyButton=Instance.new("TextButton")
+flyButton.Size=UDim2.new(0,100,0,40)
+flyButton.Position=UDim2.new(0.5,-50,0,50)
+flyButton.BackgroundColor3=Color3.fromRGB(0,170,255)
+flyButton.TextColor3=Color3.fromRGB(255,255,255)
+flyButton.Font=Enum.Font.GothamBold
+flyButton.TextSize=20
+flyButton.Text="Fly: OFF"
+flyButton.Parent=mainFrame
+local plusButton=Instance.new("TextButton")
+plusButton.Size=UDim2.new(0,40,0,40)
+plusButton.Position=UDim2.new(0.75,-20,0,110)
+plusButton.BackgroundColor3=Color3.fromRGB(0,255,0)
+plusButton.TextColor3=Color3.fromRGB(0,0,0)
+plusButton.Font=Enum.Font.GothamBold
+plusButton.TextSize=25
+plusButton.Text="+"
+plusButton.Parent=mainFrame
+local minusButton=Instance.new("TextButton")
+minusButton.Size=UDim2.new(0,40,0,40)
+minusButton.Position=UDim2.new(0.25,-20,0,110)
+minusButton.BackgroundColor3=Color3.fromRGB(255,0,0)
+minusButton.TextColor3=Color3.fromRGB(0,0,0)
+minusButton.Font=Enum.Font.GothamBold
+minusButton.TextSize=25
+minusButton.Text="-"
+minusButton.Parent=mainFrame
+local minimizeButton=Instance.new("TextButton")
+minimizeButton.Size=UDim2.new(0,30,0,30)
+minimizeButton.Position=UDim2.new(1,-35,0,5)
+minimizeButton.BackgroundColor3=Color3.fromRGB(70,70,70)
+minimizeButton.TextColor3=Color3.fromRGB(255,255,255)
+minimizeButton.Font=Enum.Font.GothamBold
+minimizeButton.TextSize=20
+minimizeButton.Text="_"
+minimizeButton.Parent=mainFrame
+local fg3Button=Instance.new("TextButton")
+fg3Button.Size=UDim2.new(0,50,0,50)
+fg3Button.Position=UDim2.new(1,-60,0.5,-25)
+fg3Button.BackgroundColor3=Color3.fromRGB(0,0,0)
+fg3Button.BorderColor3=Color3.fromRGB(255,255,255)
+fg3Button.TextColor3=Color3.fromRGB(255,255,255)
+fg3Button.Font=Enum.Font.GothamBold
+fg3Button.TextSize=20
+fg3Button.Text="FG3"
+fg3Button.Visible=false
+fg3Button.Parent=screenGui
+local confirmFrame=Instance.new("Frame")
+confirmFrame.Size=UDim2.new(0,250,0,150)
+confirmFrame.Position=UDim2.new(0.5,-125,0.5,-75)
+confirmFrame.BackgroundColor3=Color3.fromRGB(30,30,30)
+confirmFrame.BorderColor3=Color3.fromRGB(255,255,255)
+confirmFrame.BorderSizePixel=2
+confirmFrame.Visible=false
+confirmFrame.Parent=screenGui
+local confirmText=Instance.new("TextLabel")
+confirmText.Size=UDim2.new(1,0,0,50)
+confirmText.Position=UDim2.new(0,0,0,10)
+confirmText.BackgroundTransparency=1
+confirmText.Text="Do you want to close the script?"
+confirmText.Font=Enum.Font.GothamBold
+confirmText.TextSize=18
+confirmText.TextColor3=Color3.fromRGB(255,255,255)
+confirmText.Parent=confirmFrame
+local yesButton=Instance.new("TextButton")
+yesButton.Size=UDim2.new(0,80,0,40)
+yesButton.Position=UDim2.new(0.15,0,0,90)
+yesButton.BackgroundColor3=Color3.fromRGB(0,255,0)
+yesButton.TextColor3=Color3.fromRGB(0,0,0)
+yesButton.Font=Enum.Font.GothamBold
+yesButton.TextSize=18
+yesButton.Text="Yes"
+yesButton.Parent=confirmFrame
+local noButton=Instance.new("TextButton")
+noButton.Size=UDim2.new(0,80,0,40)
+noButton.Position=UDim2.new(0.6,0,0,90)
+noButton.BackgroundColor3=Color3.fromRGB(255,0,0)
+noButton.TextColor3=Color3.fromRGB(0,0,0)
+noButton.Font=Enum.Font.GothamBold
+noButton.TextSize=18
+noButton.Text="No"
+noButton.Parent=confirmFrame
+local themes={
+White={BackgroundColor=Color3.fromRGB(255,255,255),OutlineColor=Color3.fromRGB(128,128,128),TextColor=Color3.fromRGB(0,0,0)},
+Black={BackgroundColor=Color3.fromRGB(0,0,0),OutlineColor=Color3.fromRGB(128,128,128),TextColor=Color3.fromRGB(255,255,255)},
+["Night Blue"]={BackgroundColor=Color3.fromRGB(10,25,70),OutlineColor=Color3.fromRGB(128,128,128),TextColor=Color3.fromRGB(255,255,255)}
+}
+local themeSelector=Instance.new("Frame")
+themeSelector.Size=UDim2.new(0,200,0,50)
+themeSelector.Position=UDim2.new(0,10,0,160)
+themeSelector.BackgroundTransparency=1
+themeSelector.Parent=mainFrame
+local function applyTheme(themeName)
+local theme=themes[themeName]
+mainFrame.BackgroundColor3=theme.BackgroundColor
+mainFrame.BorderColor3=theme.OutlineColor
+for _,obj in pairs(mainFrame:GetDescendants())do
+if obj:IsA("TextLabel")or obj:IsA("TextButton")then
+obj.TextColor3=theme.TextColor
+end
+if obj:IsA("Frame")then
+obj.BorderColor3=theme.OutlineColor
+end
+end
+fg3Button.BackgroundColor3=theme.BackgroundColor
+fg3Button.TextColor3=theme.TextColor
+fg3Button.BorderColor3=theme.OutlineColor
+closeButton.BackgroundColor3=theme.BackgroundColor
+closeButton.TextColor3=theme.TextColor
+closeButton.BorderColor3=theme.OutlineColor
+minimizeButton.BackgroundColor3=theme.BackgroundColor
+minimizeButton.TextColor3=theme.TextColor
+minimizeButton.BorderColor3=theme.OutlineColor
+end
+for i,themeName in ipairs({"White","Black","Night Blue"})do
+local btn=Instance.new("TextButton")
+btn.Size=UDim2.new(0,60,0,40)
+btn.Position=UDim2.new(0,(i-1)*65,0,0)
+btn.Text=themeName
+btn.Font=Enum.Font.GothamBold
+btn.TextSize=16
+btn.TextColor3=Color3.new(1,1,1)
+btn.BackgroundColor3=Color3.fromRGB(50,50,50)
+btn.Parent=themeSelector
+btn.MouseButton1Click:Connect(function()
+applyTheme(themeName)
+end)
+end
+flyButton.MouseButton1Click:Connect(function()
+flying=not flying
+flyButton.Text="Fly: "..(flying and "ON" or "OFF")
+end)
+plusButton.MouseButton1Click:Connect(function()
+flySpeed=flySpeed+1
+end)
+minusButton.MouseButton1Click:Connect(function()
+flySpeed=math.max(1,flySpeed-1)
+end)
+local function animateGui(open)
+if open then
+mainFrame.Visible=true
+mainFrame.Size=UDim2.new(0,0,0,0)
+local tween=TweenService:Create(mainFrame,TweenInfo.new(0.3,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{Size=UDim2.new(0,300,0,400)})
+tween:Play()
+else
+local tween=TweenService:Create(mainFrame,TweenInfo.new(0.3,Enum.EasingStyle.Quad,Enum.EasingDirection.In),{Size=UDim2.new(0,0,0,0)})
+tween:Play()
+tween.Completed:Wait()
+mainFrame.Visible=false
+end
+end
+minimizeButton
